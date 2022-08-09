@@ -1,10 +1,6 @@
-package com.mzzlab.demo.countriesapp.model
+package com.fabrick.lab.demo.compose.countriesapp.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
-data class CountryFilters(val continent: String? = null, val language:String? = null): Parcelable{
+data class CountryFilters(val continent: String? = null, val language:String? = null) {
     fun isEmpty() = continent.isNullOrEmpty() && language.isNullOrEmpty()
 }
 
