@@ -1,6 +1,6 @@
 package com.fabrick.lab.demo.compose.countriesapp.di
 
-import com.fabrick.lab.demo.compose.countriesapp.initialize.Initializer
+import com.fabrick.lab.demo.compose.countriesapp.initialize.AppInitializer
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,8 +13,8 @@ class InitModule {
 
     @Provides
     @Singleton
-    fun provideAppInitializer(): Initializer {
-        return Initializer()
+    fun provideAppInitializer(): AppInitializer {
+        return AppInitializer()
     }
 
 }

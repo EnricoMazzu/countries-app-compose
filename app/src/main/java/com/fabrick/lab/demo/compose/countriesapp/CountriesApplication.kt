@@ -1,7 +1,7 @@
 package com.fabrick.lab.demo.compose.countriesapp
 
 import android.app.Application
-import com.fabrick.lab.demo.compose.countriesapp.initialize.Initializer
+import com.fabrick.lab.demo.compose.countriesapp.initialize.AppInitializer
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
@@ -9,11 +9,11 @@ import javax.inject.Inject
 class CountriesApplication: Application() {
 
     @Inject
-    lateinit var initializer: Initializer
+    lateinit var initializer: AppInitializer
 
     override fun onCreate() {
         super.onCreate()
-        initializer.initialize()
+        initializer.initialize(this)
     }
 
 }

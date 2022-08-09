@@ -4,6 +4,7 @@ buildscript {
         hilt_version = "2.42"
         nav_version = "2.5.0"
         accompanist_version = '0.24.13-rc'
+        emoji2_version = "1.2.0-rc01"
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.2.1'

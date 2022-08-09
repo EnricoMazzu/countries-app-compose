@@ -25,7 +25,7 @@ fun AppNavHost(
         navController = navController,
         startDestination = startDestination,
     ){
-        //addMainGraph(this)
+        // Screen of Countries
         composable(
             route = CountriesScreen.route
         ){
@@ -39,7 +39,6 @@ fun AppNavHost(
                 }
             )
         }
-
         // Screen of country details
         composable(
             route = CountryDetails.route,

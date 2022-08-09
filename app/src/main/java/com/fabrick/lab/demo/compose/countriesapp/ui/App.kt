@@ -1,14 +1,14 @@
 package com.fabrick.lab.demo.compose.countriesapp.ui
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavBackStackEntry
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.fabrick.lab.demo.compose.countriesapp.ui.navigation.*
 import com.fabrick.lab.demo.compose.countriesapp.ui.theme.CountriesAppTheme
@@ -19,12 +19,10 @@ fun App(){
         val appState = rememberAppState()
         val currentBackStack by appState.navController.currentBackStackEntryAsState()
         val appDestination = resolveAppDestination(currentBackStack)
-
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(id = appDestination.title)) },
-                    actions = {},
+                CountriesTopAppBar(
+                    appDestination = appDestination
                 )
             },
             scaffoldState = appState.scaffoldState) {
@@ -37,6 +35,29 @@ fun App(){
     }
 }
 
+@Composable
+fun CountriesTopAppBar(
+    appDestination: AppDestination,
+    onAppNavigationClick: () -> Unit = {}
+){
+    val showUpNavigationBack = upNavigationRequired(appDestination)
+    TopAppBar(
+        title = { Text(stringResource(id = appDestination.title)) },
+        navigationIcon = if(showUpNavigationBack){
+            {
+                IconButton(onClick = onAppNavigationClick) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "BackIcon",
+                    )
+                }
+            }
+        } else null ,
+        actions = {},
+    )
+}
+
+
 @Preview("AppWithCountriesPreview", showBackground = true)
 @Composable
 fun AppWithCountriesPreview(){
@@ -45,9 +66,11 @@ fun AppWithCountriesPreview(){
     CountriesAppTheme {
         Scaffold(
             topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(id = appDestination.title)) },
-                    actions = {},
+                CountriesTopAppBar(
+                    appDestination = appDestination,
+                    onAppNavigationClick = {
+                        appState.navController.popBackStack()
+                    }
                 )
             },
             scaffoldState = appState.scaffoldState) {
@@ -67,12 +90,7 @@ fun AppWithDetailsPreview(){
     val appDestination = CountryDetails
     CountriesAppTheme {
         Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text(stringResource(id = appDestination.title)) },
-                    actions = {},
-                )
-            },
+            topBar = { CountriesTopAppBar(appDestination = appDestination) },
             scaffoldState = appState.scaffoldState) {
             AppNavHost (
                 Modifier.padding(it),
@@ -85,8 +103,5 @@ fun AppWithDetailsPreview(){
 
 
 
-fun resolveAppDestination(currentBackStack: NavBackStackEntry?): AppDestination {
-    return AllRoutes.find {
-        it.route == currentBackStack?.destination?.route
-    } ?: CountriesScreen
-}
+
+
