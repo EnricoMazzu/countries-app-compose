@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.apollographql.apollo3'
 }
 
 android {
@@ -49,6 +50,11 @@ android {
     }
 }
 
+apollo {
+    packageName.set("com.fabrick.lab.demo.compose.countriesapp.graphql")
+    generateKotlinModels.set(true)
+}
+
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -77,7 +83,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
 
 
-    /*
+
     //Apollo
     implementation "com.apollographql.apollo3:apollo-runtime:$apollo_version"
     implementation("com.apollographql.apollo3:apollo-api:$apollo_version")
@@ -85,7 +91,7 @@ dependencies {
     implementation("com.apollographql.apollo3:apollo-normalized-cache:$apollo_version")
     debugImplementation("com.apollographql.apollo3:apollo-normalized-cache-sqlite-android-debug:$apollo_version")
     releaseImplementation("com.apollographql.apollo3:apollo-normalized-cache-sqlite-android:$apollo_version")
-    */
+
 
     //icons
     implementation "androidx.compose.material:material-icons-extended:$compose_version"

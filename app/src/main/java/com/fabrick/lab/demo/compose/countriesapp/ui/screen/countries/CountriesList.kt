@@ -47,13 +47,12 @@ fun CountryItem(
 @Preview(showBackground = true)
 @Composable
 fun CountryItemPreview(){
-    CountriesAppTheme() {
+    CountriesAppTheme {
         Surface(
             Modifier
-                .fillMaxSize()
-                .padding(5.dp)) {
+                .fillMaxSize()) {
+            CountryItem()
         }
-        CountryItem()
-    }
 
+    }
 }
