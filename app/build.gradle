@@ -20,6 +20,11 @@ android {
         vectorDrawables {
             useSupportLibrary true
         }
+
+        def countryServerUrl = "https://countries.trevorblades.com"
+        buildConfigField("String", "COUNTRY_SERVER_URL", "\"$countryServerUrl\"")
+        buildConfigField("boolean", "CONFIGURE_CACHE", "true")
+        buildConfigField("String", "CACHE_DB_NAME", "\"apollo.db\"")
     }
 
     buildTypes {

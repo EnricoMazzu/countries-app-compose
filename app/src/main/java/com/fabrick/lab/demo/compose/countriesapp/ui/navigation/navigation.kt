@@ -1,4 +1,4 @@
-package com.fabrick.lab.demo.compose.countriesapp.ui.navigation
+ package com.fabrick.lab.demo.compose.countriesapp.ui.navigation
 
 import androidx.annotation.StringRes
 import androidx.compose.ui.Modifier

@@ -1,4 +1,4 @@
-package com.fabrick.lab.demo.compose.countriesapp.data
+package com.fabrick.lab.demo.compose.countriesapp.common
 
 /**
  * Represent a resource with a state (loading, success or error)
@@ -23,6 +23,7 @@ sealed class Resource<out T : Any> {
     }
 }
 
-fun <T: Any> isResourceLoaded(res: Resource<T>): Boolean {
-    return (res is Resource.Success || res is Resource.Error)
+fun <T: Any> Resource<T>?.isResourceLoaded(): Boolean {
+    //return (res is Resource.Success || res is Resource.Error)
+    return this?.let { it !is Resource.Loading } ?: false
 }

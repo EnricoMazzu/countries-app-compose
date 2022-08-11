@@ -1,37 +1,47 @@
 package com.fabrick.lab.demo.compose.countriesapp.ui.screen.countries
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.fabrick.lab.demo.compose.countriesapp.common.Resource
+import com.fabrick.lab.demo.compose.countriesapp.common.isResourceLoaded
+import com.fabrick.lab.demo.compose.countriesapp.model.Country
+import java.util.*
 
 @Composable
 fun CountriesScreen(
     modifier: Modifier = Modifier,
     viewModel: CountriesViewModel = hiltViewModel(),
-    testClick: () -> Unit = {}
+    onErrorReceived: (ex:Exception) -> Unit = {}
 ) {
-    Surface(modifier) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(5.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "Go to details")
-            Button(onClick = testClick) {
-                Text(text = "Click Me")
-            }
+
+    val countriesState = viewModel.getCountries().collectAsState(initial = Resource.Loading())
+    var showLoader = !countriesState.value.isResourceLoaded()
+    var exception: Exception? = null
+    var countries = Collections.emptyList<Country>()
+
+    when(val res = countriesState.value){
+        is Resource.Loading -> {
+            exception = null
+        }
+        is Resource.Error -> {
+            exception = res.getExceptionIfNotHandled()
+        }
+        is Resource.Success -> {
+            countries = res.data ?: Collections.emptyList()
         }
     }
+
+    exception?.let {
+        onErrorReceived(it)
+    }
+
+    CountriesList(
+        itemsToDraw = countries
+    )
+
 }
 
 @Preview

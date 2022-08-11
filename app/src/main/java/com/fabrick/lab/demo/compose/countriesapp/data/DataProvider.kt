@@ -1,5 +1,6 @@
 package com.fabrick.lab.demo.compose.countriesapp.data
 
+import com.fabrick.lab.demo.compose.countriesapp.common.Resource
 import com.fabrick.lab.demo.compose.countriesapp.model.*
 
 interface DataProvider {
