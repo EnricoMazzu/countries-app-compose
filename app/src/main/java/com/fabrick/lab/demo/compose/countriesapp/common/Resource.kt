@@ -1,5 +1,10 @@
 package com.fabrick.lab.demo.compose.countriesapp.common
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
+
 /**
  * Represent a resource with a state (loading, success or error)
  * Resource status is immutable: a new instance is required to represent a state change
@@ -26,4 +31,22 @@ sealed class Resource<out T : Any> {
 fun <T: Any> Resource<T>?.isResourceLoaded(): Boolean {
     //return (res is Resource.Success || res is Resource.Error)
     return this?.let { it !is Resource.Loading } ?: false
+}
+
+
+fun <T : Any> Flow<Resource<T>>.collectResourceStates (
+    scope: CoroutineScope,
+    loading: (Resource.Loading<T>) -> Unit = {},
+    success: (Resource.Success<T>) -> Unit = {},
+    error: (Resource.Error<T>) -> Unit = {}
+): Job {
+    return scope.launch {
+        collect {
+            when(it){
+                is Resource.Loading -> loading(it)
+                is Resource.Success -> success(it)
+                is Resource.Error -> error(error)
+            }
+        }
+    }
 }
