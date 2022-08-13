@@ -14,7 +14,8 @@ import java.util.*
 fun CountriesScreen(
     modifier: Modifier = Modifier,
     viewModel: CountriesViewModel = hiltViewModel(),
-    onErrorReceived: (ex:Exception) -> Unit = {}
+    onErrorReceived: (ex:Exception) -> Unit = {},
+    onDetailsRequired: (Country) -> Unit = {}
 ) {
 
     val countriesState = viewModel.getCountries().collectAsState(initial = Resource.Loading())
@@ -40,7 +41,11 @@ fun CountriesScreen(
         onErrorReceived(it)
     }
     CountriesList(
-        itemsToDraw = countries
+        itemsToDraw = countries,
+        onCountrySelected = {
+            Timber.i("Select country $it")
+            onDetailsRequired(it)
+        }
     )
 
 }

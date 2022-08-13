@@ -32,7 +32,10 @@ fun AppNavHost(
             val viewModel: CountriesViewModel = hiltViewModel()
             CountriesScreen(
                 modifier = Modifier,
-                viewModel = viewModel
+                viewModel = viewModel,
+                onDetailsRequired = {
+                    navController.navigate(CountryDetails.createRoute(it.code))
+                }
             )
         }
         // Screen of country details

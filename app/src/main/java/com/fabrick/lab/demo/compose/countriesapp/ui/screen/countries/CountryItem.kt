@@ -1,6 +1,7 @@
 package com.fabrick.lab.demo.compose.countriesapp.ui.screen.countries
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material.Card
@@ -14,21 +15,27 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Country
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.CountryDetails
 import com.fabrick.lab.demo.compose.countriesapp.ui.theme.CountriesAppTheme
 import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.EmojiView
+import java.util.*
 
 @Composable
 fun CountryItem(
     modifier: Modifier = Modifier,
-    flagEmoji: String,
-    countryName : String,
-    countryCode: String,
+    country: Country,
+    onCountrySelected: (Country) -> Unit = {}
 ){
     Card(
         modifier = modifier
             .fillMaxWidth()
             .height(80.dp)
-            .padding(5.dp),
+            .padding(5.dp)
+            .clickable {
+                onCountrySelected(country)
+            }
+        ,
         shape = MaterialTheme
             .shapes
             .medium
@@ -41,7 +48,7 @@ fun CountryItem(
             val (emoji, name, code) = createRefs()
 
             EmojiView(
-                textValue = flagEmoji,
+                textValue = country.emoji,
                 modifier = modifier
                     .size(60.dp)
                     .constrainAs(emoji){
@@ -57,7 +64,7 @@ fun CountryItem(
                     bottom.linkTo(parent.bottom)
                     start.linkTo(emoji.end, 8.dp)
                 },
-                text = countryName,
+                text = country.name,
                 style = MaterialTheme.typography.h6
             )
 
@@ -67,7 +74,7 @@ fun CountryItem(
                     bottom.linkTo(parent.bottom)
                     end.linkTo(parent.end, 8.dp)
                 },
-                text = countryCode,
+                text = country.code,
                 style = MaterialTheme.typography.body2
             )
         }
@@ -89,13 +96,19 @@ fun EmojiView(
 @Preview(showBackground = true)
 @Composable
 fun CountryItemPreview(){
+    val sample = Country(
+        code = "AD",
+        name = "Andora",
+        emoji = "\uD83C\uDDE6\uD83C\uDDE9",
+        languages = Collections.emptyList()
+    )
+
+
     CountriesAppTheme {
         Surface(
             Modifier.fillMaxWidth()) {
             CountryItem(
-                flagEmoji = "\uD83C\uDDE6\uD83C\uDDE9",
-                countryName = "Andora",
-                countryCode = "AD"
+                country = sample
             )
         }
 

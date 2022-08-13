@@ -10,7 +10,8 @@ import java.util.*
 @Composable
 fun CountriesList (
     modifier: Modifier = Modifier,
-    itemsToDraw: List<Country> = Collections.emptyList()
+    itemsToDraw: List<Country> = Collections.emptyList(),
+    onCountrySelected: (Country) -> Unit = {}
 ) {
     LazyColumn(modifier) {
         items(
@@ -20,9 +21,10 @@ fun CountriesList (
             }
         ) { country  ->
             CountryItem (
-                flagEmoji = country.emoji,
-                countryName = country.name,
-                countryCode = country.code
+                country = country,
+                onCountrySelected = {
+                    onCountrySelected(it)
+                }
             )
         }
     }
