@@ -1,4 +1,4 @@
-package com.fabrick.lab.demo.compose.countriesapp.model
+package com.fabrick.lab.demo.compose.countriesapp.domain.model
 
 
 

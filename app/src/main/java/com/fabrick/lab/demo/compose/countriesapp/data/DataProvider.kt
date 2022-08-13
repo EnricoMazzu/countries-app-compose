@@ -1,15 +1,15 @@
 package com.fabrick.lab.demo.compose.countriesapp.data
 
 import com.fabrick.lab.demo.compose.countriesapp.common.Resource
-import com.fabrick.lab.demo.compose.countriesapp.model.*
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.*
 
 interface DataProvider {
     /**
      * Get all countries
      * @param filter filter parameter (nullable)
-     * @param useNetwork true to try online before than cache
+     * @param useNetworkFirst true to try online before than cache
      */
-    suspend fun getCountries(filter: CountryFilters? = null, useNetwork: Boolean? = false): Resource<Countries>
+    suspend fun getCountries(filter: CountryFilters? = null, useNetworkFirst: Boolean? = false): Resource<Countries>
 
     /**
      * Get details of a specific country (by code)

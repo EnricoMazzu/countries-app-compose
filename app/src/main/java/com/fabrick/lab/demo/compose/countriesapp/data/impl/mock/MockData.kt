@@ -1,8 +1,8 @@
 package com.fabrick.lab.demo.compose.countriesapp.data.impl.mock
 
-import com.fabrick.lab.demo.compose.countriesapp.model.Continent
-import com.fabrick.lab.demo.compose.countriesapp.model.CountryDetails
-import com.fabrick.lab.demo.compose.countriesapp.model.Language
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Continent
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.CountryDetails
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Language
 
 
 object MockData {

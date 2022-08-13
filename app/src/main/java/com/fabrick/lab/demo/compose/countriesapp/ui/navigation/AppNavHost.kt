@@ -47,7 +47,7 @@ fun AppNavHost(
             val countryId = it.arguments?.getString(CountryDetails.CountryIdParams)
                 ?: NavigationConstants.NoId
             val viewModel: CountryDetailsViewModel = hiltViewModel()
-            viewModel.setCountryId(countryId)
+            viewModel.setCountryCode(countryId)
             CountryDetailsScreen(
                 viewModel = viewModel
             )

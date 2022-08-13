@@ -2,4 +2,8 @@
     <string name="app_name">CountriesApp</string>
     <string name="countries_title">Countries</string>
     <string name="country_detail_title">Details</string>
+    <string name="capitalLabel">Capital</string>
+    <string name="phoneLabel">phone</string>
+    <string name="currencyLabel">Currency</string>
+    <string name="languagesLabel">languages</string>
 </resources>

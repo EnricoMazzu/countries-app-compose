@@ -9,10 +9,13 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import com.fabrick.lab.demo.compose.countriesapp.ui.theme.CountriesAppTheme
+import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.EmojiView
 
 @Composable
 fun CountryItem(
@@ -33,67 +36,55 @@ fun CountryItem(
         border = BorderStroke(5.dp, MaterialTheme.colors.background),
         elevation = 3.dp
     ) {
-        Row(
-            modifier = modifier.padding(5.dp),
-            horizontalArrangement = Arrangement.Start
-        ) {
-            //Flag
-            Column(
-                modifier =  Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
-            ) {
-                EmojiView(
-                    textValue = flagEmoji
-                )
-            }
+        ConstraintLayout(
+            modifier = Modifier.fillMaxWidth()) {
+            val (emoji, name, code) = createRefs()
 
-            Column(
-                modifier = Modifier.fillMaxHeight(),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    //Country
-                    Column(
-                        modifier = Modifier.fillMaxHeight(),
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = countryName,
-                            style = MaterialTheme.typography.h6
-                        )
-                    }
-
-                    //Caption
-                    Column(
-                        modifier = Modifier.fillMaxHeight(),
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Text(
-                            text = countryCode,
-                            style = MaterialTheme.typography.body2
-                        )
-                    }
+            EmojiView(
+                textValue = flagEmoji,
+                modifier = modifier
+                    .size(60.dp)
+                    .constrainAs(emoji){
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(parent.start, 4.dp)
                 }
-            }
+            )
+
+            Text(
+                modifier = modifier.constrainAs(name){
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    start.linkTo(emoji.end, 8.dp)
+                },
+                text = countryName,
+                style = MaterialTheme.typography.h6
+            )
+
+            Text(
+                modifier = modifier.constrainAs(code){
+                    top.linkTo(parent.top)
+                    bottom.linkTo(parent.bottom)
+                    end.linkTo(parent.end, 8.dp)
+                },
+                text = countryCode,
+                style = MaterialTheme.typography.body2
+            )
         }
     }
 }
 
-@Composable
+/*@Composable
 fun EmojiView(
     modifier: Modifier = Modifier,
     textValue: String
 ){
     Surface(
-        modifier = modifier.size(60.dp))
-    {
-        Text(text = textValue, fontSize = 40.sp)
+        modifier = modifier.size(60.dp)) {
+        Text(text = textValue, fontSize = 40.sp, textAlign = TextAlign.Center)
     }
 
-}
+}*/
 
 @Preview(showBackground = true)
 @Composable

@@ -4,11 +4,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fabrick.lab.demo.compose.countriesapp.common.Resource
-import com.fabrick.lab.demo.compose.countriesapp.data.CountriesRepo
-import com.fabrick.lab.demo.compose.countriesapp.model.Continent
-import com.fabrick.lab.demo.compose.countriesapp.model.Countries
-import com.fabrick.lab.demo.compose.countriesapp.model.CountryFilters
-import com.fabrick.lab.demo.compose.countriesapp.model.Language
+import com.fabrick.lab.demo.compose.countriesapp.domain.repo.CountriesRepo
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Continent
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Countries
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.CountryFilters
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Language
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,15 +22,14 @@ class CountriesViewModel @Inject constructor(
 ): ViewModel() {
 
     private val filters: MutableStateFlow<CountryFilters> by lazy {
-        val initialValue = savedStateHandle.get(COUNTRY_FILTERS_KEY) ?: CountryFilters()
+        val initialValue = savedStateHandle[COUNTRY_FILTERS_KEY] ?: CountryFilters()
         MutableStateFlow(initialValue)
     }
 
     init {
         viewModelScope.launch {
             filters.collect {
-                //TODO restore it
-                //savedStateHandle.set(COUNTRY_FILTERS_KEY, it)
+                savedStateHandle[COUNTRY_FILTERS_KEY] = it
                 countriesRepo.load(it)
             }
         }

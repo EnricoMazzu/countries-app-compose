@@ -1,10 +1,10 @@
 package com.fabrick.lab.demo.compose.countriesapp.data.impl
 
 import com.fabrick.lab.demo.compose.countriesapp.graphql.*
-import com.fabrick.lab.demo.compose.countriesapp.model.Continent
-import com.fabrick.lab.demo.compose.countriesapp.model.Country
-import com.fabrick.lab.demo.compose.countriesapp.model.CountryDetails
-import com.fabrick.lab.demo.compose.countriesapp.model.Language
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Continent
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Country
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.CountryDetails
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Language
 
 
 fun CountriesQuery.Data?.mapToModel(): List<Country> {

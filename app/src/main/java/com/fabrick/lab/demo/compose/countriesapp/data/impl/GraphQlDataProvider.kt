@@ -1,21 +1,21 @@
 package com.fabrick.lab.demo.compose.countriesapp.data.impl
 
+import com.apollographql.apollo3.ApolloCall
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.api.ApolloResponse
 import com.apollographql.apollo3.api.Error
 import com.apollographql.apollo3.api.Optional
 import com.apollographql.apollo3.api.Query
+import com.apollographql.apollo3.cache.normalized.FetchPolicy
+import com.apollographql.apollo3.cache.normalized.fetchPolicy
 import com.apollographql.apollo3.cache.normalized.isFromCache
 import com.fabrick.lab.demo.compose.countriesapp.common.Resource
 import com.fabrick.lab.demo.compose.countriesapp.data.ApiException
 import com.fabrick.lab.demo.compose.countriesapp.data.DataProvider
 import com.fabrick.lab.demo.compose.countriesapp.data.ErrorCode
 import com.fabrick.lab.demo.compose.countriesapp.data.asApiException
-import com.fabrick.lab.demo.compose.countriesapp.graphql.ContinentsQuery
-import com.fabrick.lab.demo.compose.countriesapp.graphql.CountryDetailsQuery
-import com.fabrick.lab.demo.compose.countriesapp.graphql.FilteredCountriesQuery
-import com.fabrick.lab.demo.compose.countriesapp.graphql.LanguagesQuery
-import com.fabrick.lab.demo.compose.countriesapp.model.*
+import com.fabrick.lab.demo.compose.countriesapp.graphql.*
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.*
 import timber.log.Timber
 
 class GraphQlDataProvider(
@@ -24,25 +24,36 @@ class GraphQlDataProvider(
 
     override suspend fun getCountries(
         filter: CountryFilters?,
-        useNetwork: Boolean?
+        useNetworkFirst: Boolean?
     ): Resource<Countries> {
-        val filterValue = filter?.continent?.let {
-            Optional.Present(it)
-        } ?: Optional.Absent
-        val query = FilteredCountriesQuery(filterValue)
-        val originalResource:Resource<Countries> = fetchCountries(query) {
-            it.mapToModel()
+        val continentFilter = filter?.continent
+        val originalResource: Resource<Countries> = if(continentFilter.isNullOrEmpty()){
+            val query = CountriesQuery()
+            fetchCountries(query, useNetworkFirst){ it.mapToModel() }
+        }else {
+            val query = FilteredCountriesQuery(Optional.Present(continentFilter))
+            fetchCountries(query, useNetworkFirst){ it.mapToModel() }
         }
         return applyClientSideFilter(originalResource, filter?.language)
     }
 
-    private suspend fun fetchCountries(
-        query: FilteredCountriesQuery,
-        mapper: (FilteredCountriesQuery.Data) -> Countries
-    ): Resource<List<Country>> {
+    private suspend fun<T : Query.Data> fetchCountries(
+        query: Query<T>,
+        useNetworkFirst: Boolean?,
+        mapper: (T) -> Countries
+    ): Resource<Countries>{
         return try {
-            val call = apolloClient.query(query)
+            Timber.d("fetchCountries")
+            val call: ApolloCall<T> = apolloClient.query(query).fetchPolicy(
+                if (useNetworkFirst == true) {
+                    FetchPolicy.NetworkFirst
+                } else {
+                    FetchPolicy.CacheFirst
+                }
+            )
+            Timber.d("call")
             val result = call.execute()  //call.executeCacheAndNetwork().single()
+            Timber.d("result : $result")
             when (result.hasErrors()) {
                 false -> Resource.Success(mapper.invoke(result.data!!), result.isFromCache)
                 else -> Resource.Error(createError(result, result.errors!!))

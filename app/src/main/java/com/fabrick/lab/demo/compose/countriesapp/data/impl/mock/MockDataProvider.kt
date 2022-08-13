@@ -3,7 +3,7 @@ package com.fabrick.lab.demo.compose.countriesapp.data.impl.mock
 
 import com.fabrick.lab.demo.compose.countriesapp.common.Resource
 import com.fabrick.lab.demo.compose.countriesapp.data.DataProvider
-import com.fabrick.lab.demo.compose.countriesapp.model.*
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.*
 import kotlinx.coroutines.delay
 
 class MockDataProvider : DataProvider {

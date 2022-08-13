@@ -1,7 +1,7 @@
-package com.fabrick.lab.demo.compose.countriesapp.data
+package com.fabrick.lab.demo.compose.countriesapp.domain.repo
 
 import com.fabrick.lab.demo.compose.countriesapp.common.Resource
-import com.fabrick.lab.demo.compose.countriesapp.model.*
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.*
 import kotlinx.coroutines.flow.Flow
 
 interface CountriesRepo {

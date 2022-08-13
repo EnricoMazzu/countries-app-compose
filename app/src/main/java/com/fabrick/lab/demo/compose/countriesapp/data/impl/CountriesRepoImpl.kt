@@ -1,9 +1,9 @@
 package com.fabrick.lab.demo.compose.countriesapp.data.impl
 
 import com.fabrick.lab.demo.compose.countriesapp.common.Resource
-import com.fabrick.lab.demo.compose.countriesapp.data.CountriesRepo
+import com.fabrick.lab.demo.compose.countriesapp.domain.repo.CountriesRepo
 import com.fabrick.lab.demo.compose.countriesapp.data.DataProvider
-import com.fabrick.lab.demo.compose.countriesapp.model.*
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.*
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -22,6 +22,7 @@ class CountriesRepoImpl (
     override val countries: Flow<Resource<Countries>> = _countries
 
     override suspend fun load(countryFilters: CountryFilters?, forceNetworkFetch: Boolean){
+        Timber.d("load")
         loadCountriesInternal(
             countryFilters = countryFilters,
             useNetwork = forceNetworkFetch
@@ -33,7 +34,7 @@ class CountriesRepoImpl (
         _countries.emit(Resource.Loading())
         val resource = dataProvider.getCountries(
             filter = countryFilters,
-            useNetwork = useNetwork
+            useNetworkFirst = useNetwork
         );
         _countries.emit(resource)
     }
