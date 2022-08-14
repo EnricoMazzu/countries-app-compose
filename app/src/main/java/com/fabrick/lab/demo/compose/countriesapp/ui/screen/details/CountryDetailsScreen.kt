@@ -35,7 +35,6 @@ fun CountryDetailsScreen (
     val composeState = viewModel.uiState.collectAsState(initial = CountryDetailsViewModel.UiState())
     val state = composeState.value
 
-
     LaunchedEffect(true){
         viewModel.reload()
     }

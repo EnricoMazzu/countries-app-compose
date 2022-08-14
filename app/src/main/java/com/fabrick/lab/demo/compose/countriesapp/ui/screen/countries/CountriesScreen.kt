@@ -29,9 +29,7 @@ fun CountriesScreen(
     onDetailsRequired: (Country) -> Unit = {},
     appBarState: AppBarState,
 ) {
-
     Timber.d("Recompose CountriesScreen")
-
     addNavMenuActions(
         appBarState = appBarState,
         navActions = listOf (
@@ -45,39 +43,17 @@ fun CountriesScreen(
             )
         )
     )
-    val refreshState = rememberSwipeRefreshState(isRefreshing = false)
 
-    val countriesState = viewModel.getCountries().collectAsState(initial = Resource.Loading())
-    var exception: Exception? = null
-    var countries = Collections.emptyList<Country>()
-
-    when(val res = countriesState.value){
-        is Resource.Loading -> {
-            Timber.i("countriesState on loading")
-            exception = null
-        }
-        is Resource.Success -> {
-            Timber.i("countriesState on Success", res.data)
-            refreshState.isRefreshing = false
-            countries = res.data ?: Collections.emptyList()
-        }
-        is Resource.Error -> {
-            Timber.i("countriesState on error", res.peekException())
-            refreshState.isRefreshing = false
-            exception = res.getExceptionIfNotHandled()
-        }
-
-    }
-
+    val uiState = viewModel.uiState.collectAsState()
+    val refreshState = rememberSwipeRefreshState(uiState.value.pullToRefreshLoading)
+    val exception = uiState.value.error
     exception?.let(onErrorReceived)
 
-
     CountriesScreenContent(
-        countries = countries,
+        countries = uiState.value.countries,
         refreshState = refreshState,
         onCountrySelected = onDetailsRequired,
         onReloadRequired = {
-            refreshState.isRefreshing = true
             viewModel.reload();
         }
     )
