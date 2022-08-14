@@ -37,16 +37,17 @@ class CountriesViewModel @Inject constructor(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        Timber.i("View Model Countries cleared")
-    }
-
     fun getCountries(): Flow<Resource<Countries>> = countriesRepo.countries
 
     fun getContinents(): Flow<Resource<List<Continent>>> = countriesRepo.getContinents()
 
     fun getLanguages():  Flow<Resource<List<Language>>> = countriesRepo.getLanguages()
+
+    fun reload() {
+        viewModelScope.launch {
+            countriesRepo.load(filters.value, true)
+        }
+    }
 
     companion object{
         const val COUNTRY_FILTERS_KEY = "COUNTRY_FILTERS_KEY"

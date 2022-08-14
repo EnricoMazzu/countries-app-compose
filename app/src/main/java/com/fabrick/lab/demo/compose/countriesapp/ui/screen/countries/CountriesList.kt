@@ -22,6 +22,7 @@ fun CountriesList (
     itemsToDraw: List<Country> = Collections.emptyList(),
     onCountrySelected: (Country) -> Unit = {}
 ) {
+    Timber.d("Recompose with ${itemsToDraw.size} items")
     LazyColumn(modifier) {
         items(
             items = itemsToDraw,

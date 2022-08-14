@@ -7,20 +7,24 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun CaptionValueItem(
+fun LabelValueItem(
     modifier: Modifier = Modifier,
     label: String,
-    value: String
+    value: String,
+    labelStyle: TextStyle = MaterialTheme.typography.body2,
+    valueStyle: TextStyle = MaterialTheme.typography.body1,
 ){
     Column(modifier = modifier.fillMaxWidth()) {
         //label
         Text(
             modifier = modifier,
             text = label,
-            style = MaterialTheme.typography.body2
+            style = labelStyle.copy(fontStyle = FontStyle.Italic)
         )
         //value
         Text(
@@ -29,7 +33,7 @@ fun CaptionValueItem(
                 .fillMaxWidth()
             ,
             text = value,
-            style = MaterialTheme.typography.body1
+            style = valueStyle
         )
     }
 }

@@ -6,29 +6,30 @@ import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.apollographql.apollo3.api.json.BufferedSinkJsonWriter.Companion.string
 import com.fabrick.lab.demo.compose.countriesapp.domain.model.CountryDetails
 import com.fabrick.lab.demo.compose.countriesapp.ui.theme.CountriesAppTheme
 import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.EmojiView
 import com.fabrick.lab.demo.compose.countriesapp.R
-import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.CaptionValueItem
+import com.fabrick.lab.demo.compose.countriesapp.ui.AppBarState
+import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.LabelValueItem
 import timber.log.Timber
 
 @Composable
 fun CountryDetailsScreen (
     modifier: Modifier = Modifier,
-    viewModel: CountryDetailsViewModel = hiltViewModel()
+    viewModel: CountryDetailsViewModel = hiltViewModel(),
+    appBarState: AppBarState
 ) {
     Timber.d("[Recompose] CountryDetailsScreen")
     val composeState = viewModel.uiState.collectAsState(initial = CountryDetailsViewModel.UiState())
@@ -89,21 +90,22 @@ fun CountryDetailsContent(
                 .constrainAs(emojiFlag) {
                     top.linkTo(parent.top, 8.dp)
                     start.linkTo(parent.start, 8.dp)
-
                 }
             ,
+            fontSize = 60.sp,
             textValue = countryDetails?.emoji.orEmpty()
         )
 
         Text(modifier = modifier
             .constrainAs(lblCountryName){
-                top.linkTo(emojiFlag.top)
+                top.linkTo(emojiFlag.top, 8.dp)
                 start.linkTo(emojiFlag.end, 8.dp)
                 end.linkTo(parent.end, 8.dp)
                 width = Dimension.fillToConstraints
             },
             text = countryDetails?.name.orEmpty(),
-            style = MaterialTheme.typography.h6
+            style = MaterialTheme.typography.h6,
+            textAlign = TextAlign.Center
         )
 
         Text(modifier = modifier
@@ -115,10 +117,11 @@ fun CountryDetailsContent(
                 width = Dimension.fillToConstraints
             },
             text = countryDetails?.continent.orEmpty(),
-            style = MaterialTheme.typography.body2
+            style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.W300),
+            textAlign = TextAlign.Center
         )
 
-        CaptionValueItem (
+        LabelValueItem (
             modifier = modifier
                 .constrainAs(lblCapital) {
                     top.linkTo(emojiFlag.bottom, 24.dp)
@@ -131,7 +134,7 @@ fun CountryDetailsContent(
             value = countryDetails?.capital.orEmpty()
         )
 
-        CaptionValueItem (
+        LabelValueItem (
             modifier = modifier
                 .constrainAs(lblPhone) {
                     top.linkTo(lblCapital.bottom, 24.dp)
@@ -144,7 +147,7 @@ fun CountryDetailsContent(
             value = countryDetails?.phone.orEmpty()
         )
 
-        CaptionValueItem (
+        LabelValueItem (
             modifier = modifier
                 .constrainAs(lblCurrency) {
                     top.linkTo(lblPhone.bottom, 24.dp)
@@ -157,7 +160,7 @@ fun CountryDetailsContent(
             value = countryDetails?.currency.orEmpty()
         )
 
-        CaptionValueItem (
+        LabelValueItem (
             modifier = modifier
                 .constrainAs(lblLanguages) {
                     top.linkTo(lblCurrency.bottom, 24.dp)
