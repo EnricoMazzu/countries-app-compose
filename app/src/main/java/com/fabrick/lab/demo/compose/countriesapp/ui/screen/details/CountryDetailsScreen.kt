@@ -7,6 +7,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,18 +23,22 @@ import com.fabrick.lab.demo.compose.countriesapp.ui.theme.CountriesAppTheme
 import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.EmojiView
 import com.fabrick.lab.demo.compose.countriesapp.R
 import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.CaptionValueItem
+import timber.log.Timber
 
 @Composable
 fun CountryDetailsScreen (
     modifier: Modifier = Modifier,
     viewModel: CountryDetailsViewModel = hiltViewModel()
 ) {
+    Timber.d("[Recompose] CountryDetailsScreen")
     val composeState = viewModel.uiState.collectAsState(initial = CountryDetailsViewModel.UiState())
     val state = composeState.value
 
-    state.error?.let {
-        //TODO
+
+    LaunchedEffect(true){
+        viewModel.reload()
     }
+
     Surface(modifier.fillMaxSize()) {
         CountryDetailsContent(
             modifier = modifier,
@@ -48,6 +54,7 @@ fun CountryDetailsContent(
     onLoading: Boolean = false,
     countryDetails: CountryDetails? = null
 ) {
+    Timber.d("[Recompose] CountryDetailsContent")
     ConstraintLayout(modifier.fillMaxWidth()) {
         val (
             countryLoadProgress,

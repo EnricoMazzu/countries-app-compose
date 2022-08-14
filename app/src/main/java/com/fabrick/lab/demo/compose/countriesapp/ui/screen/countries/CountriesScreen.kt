@@ -2,6 +2,7 @@ package com.fabrick.lab.demo.compose.countriesapp.ui.screen.countries
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -12,12 +13,11 @@ import java.util.*
 
 @Composable
 fun CountriesScreen(
-    modifier: Modifier = Modifier,
     viewModel: CountriesViewModel = hiltViewModel(),
     onErrorReceived: (ex:Exception) -> Unit = {},
     onDetailsRequired: (Country) -> Unit = {}
 ) {
-
+    Timber.d("Recompose CountriesScreen")
     val countriesState = viewModel.getCountries().collectAsState(initial = Resource.Loading())
     var exception: Exception? = null
     var countries = Collections.emptyList<Country>()
@@ -27,28 +27,38 @@ fun CountriesScreen(
             Timber.i("countriesState on loading")
             exception = null
         }
-        is Resource.Error -> {
-            Timber.i("countriesState on error", res.peekException())
-            exception = res.getExceptionIfNotHandled()
-        }
         is Resource.Success -> {
             Timber.i("countriesState on Success", res.data)
             countries = res.data ?: Collections.emptyList()
         }
-    }
-
-    exception?.let {
-        onErrorReceived(it)
-    }
-    CountriesList(
-        itemsToDraw = countries,
-        onCountrySelected = {
-            Timber.i("Select country $it")
-            onDetailsRequired(it)
+        is Resource.Error -> {
+            Timber.i("countriesState on error", res.peekException())
+            exception = res.getExceptionIfNotHandled()
         }
-    )
 
+    }
+
+    exception?.let(onErrorReceived)
+
+    CountriesScreenContent(
+        countries = countries,
+        onCountrySelected = onDetailsRequired
+    )
 }
+
+@Composable
+fun CountriesScreenContent(
+    modifier: Modifier = Modifier,
+    countries: List<Country> = Collections.emptyList(),
+    onCountrySelected: (Country) -> Unit = {}
+) {
+    CountriesList(
+        modifier = modifier,
+        itemsToDraw = countries,
+        onCountrySelected = onCountrySelected
+    )
+}
+
 
 @Preview
 @Composable

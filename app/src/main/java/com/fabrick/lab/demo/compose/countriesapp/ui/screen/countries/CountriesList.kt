@@ -13,6 +13,7 @@ import com.fabrick.lab.demo.compose.countriesapp.data.impl.mock.MockDataProvider
 import com.fabrick.lab.demo.compose.countriesapp.domain.model.Country
 import com.fabrick.lab.demo.compose.countriesapp.domain.model.Language
 import com.fabrick.lab.demo.compose.countriesapp.ui.theme.CountriesAppTheme
+import timber.log.Timber
 import java.util.*
 
 @Composable

@@ -33,19 +33,28 @@ fun <T: Any> Resource<T>?.isResourceLoaded(): Boolean {
     return this?.let { it !is Resource.Loading } ?: false
 }
 
-
+/**
+ * TODO
+ *
+ * @param T
+ * @param scope
+ * @param loading
+ * @param success
+ * @param error
+ * @return
+ */
 fun <T : Any> Flow<Resource<T>>.collectResourceStates (
     scope: CoroutineScope,
-    loading: (Resource.Loading<T>) -> Unit = {},
-    success: (Resource.Success<T>) -> Unit = {},
-    error: (Resource.Error<T>) -> Unit = {}
+    onLoading: (Resource.Loading<T>) -> Unit = {},
+    onSuccess: (Resource.Success<T>) -> Unit = {},
+    onError: (Resource.Error<T>) -> Unit = {}
 ): Job {
     return scope.launch {
         collect {
             when(it){
-                is Resource.Loading -> loading(it)
-                is Resource.Success -> success(it)
-                is Resource.Error -> error(error)
+                is Resource.Loading -> onLoading(it)
+                is Resource.Success -> onSuccess(it)
+                is Resource.Error -> onError(it)
             }
         }
     }

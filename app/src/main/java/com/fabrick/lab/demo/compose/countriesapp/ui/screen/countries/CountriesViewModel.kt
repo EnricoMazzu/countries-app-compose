@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,12 +28,18 @@ class CountriesViewModel @Inject constructor(
     }
 
     init {
+        Timber.i("View Model Countries init")
         viewModelScope.launch {
             filters.collect {
                 savedStateHandle[COUNTRY_FILTERS_KEY] = it
                 countriesRepo.load(it)
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Timber.i("View Model Countries cleared")
     }
 
     fun getCountries(): Flow<Resource<Countries>> = countriesRepo.countries

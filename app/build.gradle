@@ -78,7 +78,7 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
     //view model
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0-alpha01"
 
     //hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"

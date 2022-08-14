@@ -25,16 +25,16 @@ class CountriesRepoImpl (
         Timber.d("load")
         loadCountriesInternal(
             countryFilters = countryFilters,
-            useNetwork = forceNetworkFetch
+            useNetworkFirst = forceNetworkFetch
         )
     }
 
-    private suspend fun loadCountriesInternal(countryFilters: CountryFilters? = null, useNetwork: Boolean) {
-        Timber.d("loadCountriesInternal useNetwork: %s", useNetwork)
+    private suspend fun loadCountriesInternal(countryFilters: CountryFilters? = null, useNetworkFirst: Boolean) {
+        Timber.d("loadCountriesInternal useNetworkFirst: %s", useNetworkFirst)
         _countries.emit(Resource.Loading())
         val resource = dataProvider.getCountries(
             filter = countryFilters,
-            useNetworkFirst = useNetwork
+            useNetworkFirst = useNetworkFirst
         );
         _countries.emit(resource)
     }

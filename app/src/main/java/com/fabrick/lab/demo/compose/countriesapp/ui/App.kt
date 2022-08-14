@@ -22,7 +22,10 @@ fun App(){
         Scaffold(
             topBar = {
                 CountriesTopAppBar(
-                    appDestination = appDestination
+                    appDestination = appDestination,
+                    onUpNavigationClick = {
+                        appState.navController.popBackStack()
+                    }
                 )
             },
             scaffoldState = appState.scaffoldState) {
@@ -38,14 +41,14 @@ fun App(){
 @Composable
 fun CountriesTopAppBar(
     appDestination: AppDestination,
-    onAppNavigationClick: () -> Unit = {}
+    onUpNavigationClick: () -> Unit = {}
 ){
     val showUpNavigationBack = upNavigationRequired(appDestination)
     TopAppBar(
         title = { Text(stringResource(id = appDestination.title)) },
         navigationIcon = if(showUpNavigationBack){
             {
-                IconButton(onClick = onAppNavigationClick) {
+                IconButton(onClick = onUpNavigationClick) {
                     Icon(
                         imageVector = Icons.Default.ArrowBack,
                         contentDescription = "BackIcon",
@@ -68,9 +71,6 @@ fun AppWithCountriesPreview(){
             topBar = {
                 CountriesTopAppBar(
                     appDestination = appDestination,
-                    onAppNavigationClick = {
-                        appState.navController.popBackStack()
-                    }
                 )
             },
             scaffoldState = appState.scaffoldState) {

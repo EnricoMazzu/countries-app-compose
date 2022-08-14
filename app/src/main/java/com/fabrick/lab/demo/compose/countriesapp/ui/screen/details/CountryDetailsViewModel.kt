@@ -11,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import timber.log.Timber
+import java.lang.IllegalStateException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,6 +25,15 @@ class CountryDetailsViewModel @Inject constructor(
         val countryDetails: CountryDetails? = null,
         val error: Exception? = null
     )
+
+    init {
+        Timber.i("View Model Details init")
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Timber.i("View Model Details cleared")
+    }
 
     //prevent multiple loading in parallel
     private var pendingJob: Job? = null
@@ -39,6 +49,12 @@ class CountryDetailsViewModel @Inject constructor(
     }
 
     fun reload(){
+        if(countryCode.isNullOrEmpty()){
+            _uiState.value = uiState.value.copy(
+                error = IllegalStateException("Country code is null")
+            )
+            return
+        }
         loadDetails(countryCode!!)
     }
 
@@ -46,18 +62,20 @@ class CountryDetailsViewModel @Inject constructor(
         pendingJob?.cancel()
         pendingJob = countriesRepo.getCountryDetails(countryCode).collectResourceStates(
             scope = viewModelScope,
-            loading = { handleLoading() },
-            success = { handleDetailsReady(it) },
-            error = { handleError(it) }
+            onLoading = { handleLoading() },
+            onSuccess = { handleDetailsReady(it) },
+            onError = { handleError(it) }
         )
     }
 
     private fun handleLoading() {
+        Timber.d("handleLoading")
         val state = uiState.value
         _uiState.value = state.copy(onLoading = true)
     }
 
     private fun handleDetailsReady(it: Resource.Success<CountryDetails>) {
+        Timber.d("handleDetailsReady $it")
         val state = uiState.value
         _uiState.value = state.copy(
             onLoading = false,
@@ -73,6 +91,4 @@ class CountryDetailsViewModel @Inject constructor(
             error = it.getExceptionIfNotHandled()
         )
     }
-
-
 }
