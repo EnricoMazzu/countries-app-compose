@@ -29,11 +29,11 @@ fun CountriesScreen(
     viewModel: CountriesViewModel = hiltViewModel(),
     onErrorReceived: (ex: Exception) -> Unit = {},
     onDetailsRequired: (Country) -> Unit = {},
-    appBarState: AppBarState,
+    setMenuActions: (List<NavMenuAction>) -> Unit = {},
 ) {
     Timber.d("Recompose CountriesScreen")
     addNavMenuActions(
-        appBarState = appBarState,
+        setMenuActions = setMenuActions,
         navActions = listOf (
             NavMenuAction(
                 id = 0,
@@ -45,6 +45,7 @@ fun CountriesScreen(
             )
         )
     )
+
 
     val uiState = viewModel.uiState.collectAsState()
     val refreshState = rememberSwipeRefreshState(uiState.value.pullToRefreshLoading)

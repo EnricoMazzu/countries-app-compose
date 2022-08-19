@@ -29,13 +29,12 @@ import timber.log.Timber
 fun CountryDetailsScreen (
     modifier: Modifier = Modifier,
     viewModel: CountryDetailsViewModel = hiltViewModel(),
-    appBarState: AppBarState
 ) {
     Timber.d("[Recompose] CountryDetailsScreen")
     val composeState = viewModel.uiState.collectAsState(initial = CountryDetailsViewModel.UiState())
     val state = composeState.value
 
-    LaunchedEffect(true){
+    LaunchedEffect(viewModel){
         viewModel.reload()
     }
 

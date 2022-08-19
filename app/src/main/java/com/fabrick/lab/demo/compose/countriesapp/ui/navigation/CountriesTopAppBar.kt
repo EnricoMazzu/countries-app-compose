@@ -51,13 +51,14 @@ fun CountriesTopAppBar(
 @Composable
 @SuppressLint("ComposableNaming")
 fun addNavMenuActions (
-    appBarState: AppBarState,
+    setMenuActions: (List<NavMenuAction>) -> Unit,
     navActions: List<NavMenuAction> = Collections.emptyList(),
 ) {
-    DisposableEffect(key1 = true){
-        appBarState.setActions(navActions)
+    DisposableEffect(true){
+        setMenuActions(navActions)
         onDispose {
-            appBarState.clearAllActions()
+            Timber.d("Dispose effect: clear menu action")
+            setMenuActions(Collections.emptyList())
         }
     }
 }

@@ -20,7 +20,7 @@ fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = CountriesScreen.route,
-    appBarState: AppBarState
+    setMenuAction: (List<NavMenuAction>) -> Unit,
 ) {
 
     NavHost(
@@ -36,10 +36,10 @@ fun AppNavHost(
             val viewModel: CountriesViewModel = hiltViewModel()
             CountriesScreen(
                 viewModel = viewModel,
-                appBarState = appBarState,
                 onDetailsRequired = { country ->
                     navController.navigate(CountryDetails.createRoute(country.code))
                 },
+                setMenuActions = setMenuAction
             )
         }
         // Screen of country details
@@ -56,8 +56,7 @@ fun AppNavHost(
             val viewModel: CountryDetailsViewModel = hiltViewModel()
             viewModel.setCountryCode(countryId)
             CountryDetailsScreen(
-                viewModel = viewModel,
-                appBarState = appBarState
+                viewModel = viewModel
             )
         }
     }

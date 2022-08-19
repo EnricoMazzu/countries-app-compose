@@ -30,7 +30,9 @@ fun App(){
             AppNavHost (
                 Modifier.padding(it),
                 navController = appState.navController,
-                appBarState = appState.appBarState
+                setMenuAction = { actions ->
+                    appState.appBarState.setActions(actions)
+                }
             )
         }
 
@@ -59,7 +61,9 @@ fun AppWithCountriesPreview(){
                 Modifier.padding(it),
                 navController = appState.navController,
                 startDestination = appDestination.route,
-                appBarState = appState.appBarState
+                setMenuAction = { actions ->
+                    appState.appBarState.setActions(actions)
+                }
             )
         }
     }
@@ -85,7 +89,9 @@ fun AppWithDetailsPreview(){
                 Modifier.padding(it),
                 navController = appState.navController,
                 startDestination = appDestination.route,
-                appBarState = appState.appBarState
+                setMenuAction = { actions ->
+                    appState.appBarState.setActions(actions)
+                }
             )
         }
     }
