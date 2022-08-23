@@ -10,7 +10,7 @@ class MockDataProvider : DataProvider {
 
     override suspend fun getCountries(
         filter: CountryFilters?,
-        useNetwork: Boolean?
+        useNetworkFirst: Boolean?
     ): Resource<Countries> {
         delay(1000)
         val countries = MockData.getCountries();

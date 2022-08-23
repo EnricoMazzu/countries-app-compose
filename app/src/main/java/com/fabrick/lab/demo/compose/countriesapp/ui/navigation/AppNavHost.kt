@@ -1,6 +1,8 @@
 package com.fabrick.lab.demo.compose.countriesapp.ui.navigation
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -15,6 +17,8 @@ import com.fabrick.lab.demo.compose.countriesapp.ui.screen.details.CountryDetail
 import com.fabrick.lab.demo.compose.countriesapp.ui.screen.details.CountryDetailsViewModel
 import timber.log.Timber
 
+@ExperimentalComposeUiApi
+@ExperimentalMaterialApi
 @Composable
 fun AppNavHost(
     modifier: Modifier = Modifier,

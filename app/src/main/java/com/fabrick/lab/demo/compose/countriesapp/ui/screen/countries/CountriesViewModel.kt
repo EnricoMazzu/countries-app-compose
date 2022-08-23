@@ -5,15 +5,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.fabrick.lab.demo.compose.countriesapp.common.Resource
 import com.fabrick.lab.demo.compose.countriesapp.common.collectResourceStates
-import com.fabrick.lab.demo.compose.countriesapp.domain.model.*
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Continent
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Countries
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.CountryFilters
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.Language
 import com.fabrick.lab.demo.compose.countriesapp.domain.repo.CountriesRepo
-import com.fabrick.lab.demo.compose.countriesapp.ui.screen.details.CountryDetailsViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
@@ -29,7 +29,7 @@ class CountriesViewModel @Inject constructor(
         val pullToRefreshLoading: Boolean = false,
         val onLoading: Boolean = true,
         val countries: Countries = Collections.emptyList(),
-        val error: Exception? = null
+        val error: Exception? = null,
     )
 
     private val _uiState = MutableStateFlow(UiState())
@@ -41,7 +41,7 @@ class CountriesViewModel @Inject constructor(
     }
 
     init {
-        Timber.i("View Model Countries init")
+        Timber.i("View Model Countries init ${this.hashCode()}")
         viewModelScope.launch {
             filters.collect {
                 savedStateHandle[COUNTRY_FILTERS_KEY] = it

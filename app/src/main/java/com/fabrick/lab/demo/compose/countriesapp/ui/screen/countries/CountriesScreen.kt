@@ -4,14 +4,16 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.LinearProgressIndicator
-import androidx.compose.material.Surface
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.runtime.*
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import com.fabrick.lab.demo.compose.countriesapp.data.impl.mock.MockData
 import com.fabrick.lab.demo.compose.countriesapp.domain.model.Country
 import com.fabrick.lab.demo.compose.countriesapp.ui.AppBarState
@@ -21,9 +23,12 @@ import com.fabrick.lab.demo.compose.countriesapp.ui.theme.CountriesAppTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
+@ExperimentalComposeUiApi
+@ExperimentalMaterialApi
 @Composable
 fun CountriesScreen(
     viewModel: CountriesViewModel = hiltViewModel(),
@@ -31,6 +36,8 @@ fun CountriesScreen(
     onDetailsRequired: (Country) -> Unit = {},
     setMenuActions: (List<NavMenuAction>) -> Unit = {},
 ) {
+    val modalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val coroutineScope = rememberCoroutineScope()
     Timber.d("Recompose CountriesScreen")
     addNavMenuActions(
         setMenuActions = setMenuActions,
@@ -41,6 +48,14 @@ fun CountriesScreen(
                 icon = Icons.Default.FilterList,
                 onActionClick = {
                     Timber.d("Open filter")
+                    coroutineScope.launch {
+                        if(modalBottomSheetState.isVisible){
+                            modalBottomSheetState.hide()
+                        }else{
+                            modalBottomSheetState.show()
+                        }
+
+                    }
                 }
             )
         )
@@ -52,15 +67,25 @@ fun CountriesScreen(
     val exception = uiState.value.error
     exception?.let(onErrorReceived)
 
-    CountriesScreenContent(
-        countries = uiState.value.countries,
-        refreshState = refreshState,
-        showProgress = uiState.value.onLoading,
-        onCountrySelected = onDetailsRequired,
-        onReloadRequired = {
-            viewModel.reload();
-        }
-    )
+    
+    FilterBottomSheetLayout(
+        sheetState = modalBottomSheetState,
+        viewModel = viewModel
+    ) {
+        CountriesScreenContent(
+            countries = uiState.value.countries,
+            refreshState = refreshState,
+            showProgress = uiState.value.onLoading,
+            onCountrySelected = onDetailsRequired,
+            onReloadRequired = {
+                viewModel.reload();
+            }
+        )
+    }
+
+
+    
+
 }
 
 @Composable
@@ -87,7 +112,7 @@ fun CountriesScreenContent(
             }
         ){
             CountriesList(
-                modifier = modifier,
+                modifier = Modifier,
                 itemsToDraw = countries,
                 onCountrySelected = onCountrySelected
             )

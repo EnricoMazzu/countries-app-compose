@@ -27,12 +27,12 @@ class CountryDetailsViewModel @Inject constructor(
     )
 
     init {
-        Timber.i("View Model Details init")
+        Timber.i(">>>ViewModel Details init ${this.hashCode()}")
     }
 
     override fun onCleared() {
         super.onCleared()
-        Timber.i("View Model Details cleared")
+        Timber.i(">>>ViewModel Details cleared ${this.hashCode()}")
     }
 
     //prevent multiple loading in parallel

@@ -38,9 +38,9 @@ fun <T: Any> Resource<T>?.isResourceLoaded(): Boolean {
  *
  * @param T
  * @param scope
- * @param loading
- * @param success
- * @param error
+ * @param onLoading
+ * @param onSuccess
+ * @param onError
  * @return
  */
 fun <T : Any> Flow<Resource<T>>.collectResourceStates (

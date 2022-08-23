@@ -4,12 +4,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.fabrick.lab.demo.compose.countriesapp.ui.navigation.*
 import com.fabrick.lab.demo.compose.countriesapp.ui.theme.CountriesAppTheme
 
+@ExperimentalComposeUiApi
+@ExperimentalMaterialApi
 @Composable
 fun App(){
     CountriesAppTheme {
@@ -40,6 +43,8 @@ fun App(){
 }
 
 
+@ExperimentalComposeUiApi
+@ExperimentalMaterialApi
 @Preview("AppWithCountriesPreview", showBackground = true)
 @Composable
 fun AppWithCountriesPreview(){
@@ -69,6 +74,8 @@ fun AppWithCountriesPreview(){
     }
 }
 
+@ExperimentalComposeUiApi
+@ExperimentalMaterialApi
 @Preview("AppWithDetails", showBackground = true)
 @Composable
 fun AppWithDetailsPreview(){

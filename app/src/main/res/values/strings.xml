@@ -6,4 +6,5 @@
     <string name="phoneLabel">phone</string>
     <string name="currencyLabel">Currency</string>
     <string name="languagesLabel">languages</string>
+    <string name="continent_placeholder">Continent</string>
 </resources>
