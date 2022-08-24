@@ -5,6 +5,8 @@
     <string name="capitalLabel">Capital</string>
     <string name="phoneLabel">phone</string>
     <string name="currencyLabel">Currency</string>
-    <string name="languagesLabel">languages</string>
+    <string name="languagesLabel">Languages</string>
     <string name="continent_placeholder">Continent</string>
+    <string name="language_placeholder">Language</string>
+    <string name="filter_header_label">Filter</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.fabrick.lab.demo.compose.countriesapp.ui.widgets
 
+import androidx.annotation.StringRes
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -50,6 +51,8 @@ fun rememberTextDropDownMenuState(parentId: String = "parent") = remember(parent
 @Composable
 fun TextDropDownMenu(
     modifier: Modifier = Modifier,
+    label: @Composable (() -> Unit)? = null,
+    placeholder: @Composable (() -> Unit)? = null,
     state: TextDropDownMenuState,
     onMenuExpanded: () -> Unit = {}
 ){
@@ -68,12 +71,8 @@ fun TextDropDownMenu(
             readOnly = true,
             value = selectedOptionText?.text.orEmpty(),
             onValueChange = { },
-            label = {
-                Text(stringResource(id = R.string.continent_placeholder))
-            },
-            placeholder = {
-                Text(text = stringResource(id = R.string.continent_placeholder))
-            },
+            label = label,
+            placeholder = placeholder,
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = expanded
@@ -101,3 +100,20 @@ fun TextDropDownMenu(
     }
 }
 
+
+@ExperimentalMaterialApi
+@Composable
+fun TextDropDownMenu(
+    modifier: Modifier = Modifier,
+    state: TextDropDownMenuState,
+    @StringRes labelRes: Int
+) = TextDropDownMenu(
+    modifier = modifier,
+    state = state,
+    label = {
+        Text(stringResource(id = labelRes))
+    },
+    placeholder = {
+        Text(stringResource(id = labelRes))
+    }
+)
