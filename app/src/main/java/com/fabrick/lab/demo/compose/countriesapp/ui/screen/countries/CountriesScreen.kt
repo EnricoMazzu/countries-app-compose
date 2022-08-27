@@ -16,6 +16,7 @@ import com.fabrick.lab.demo.compose.countriesapp.data.impl.mock.MockData
 import com.fabrick.lab.demo.compose.countriesapp.domain.model.Country
 import com.fabrick.lab.demo.compose.countriesapp.ui.navigation.NavMenuAction
 import com.fabrick.lab.demo.compose.countriesapp.ui.navigation.addNavMenuActions
+import com.fabrick.lab.demo.compose.countriesapp.ui.screen.countries.filter.FilterBottomSheetLayout
 import com.fabrick.lab.demo.compose.countriesapp.ui.theme.CountriesAppTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshState
@@ -40,24 +41,25 @@ fun CountriesScreen(
     Timber.d("Recompose CountriesScreen")
     addNavMenuActions(
         setMenuActions = setMenuActions,
-        navActions = listOf (
-            NavMenuAction(
-                id = 0,
-                contentDescription = "Filter Toggle",
-                icon = Icons.Default.FilterList,
-                onActionClick = {
-                    Timber.d("Open filter")
-                    coroutineScope.launch {
-                        if(modalBottomSheetState.isVisible){
-                            modalBottomSheetState.hide()
-                        }else{
-                            modalBottomSheetState.show()
-                        }
+        navActions = {
+            listOf (
+                NavMenuAction(
+                    id = 0,
+                    contentDescription = "Filter Toggle",
+                    icon = Icons.Default.FilterList,
+                    onActionClick = {
+                        coroutineScope.launch {
+                            if(modalBottomSheetState.isVisible){
+                                modalBottomSheetState.hide()
+                            }else{
+                                modalBottomSheetState.show()
+                            }
 
+                        }
                     }
-                }
+                )
             )
-        )
+        }
     )
 
     val uiState = viewModel.uiState.collectAsState()
@@ -65,9 +67,12 @@ fun CountriesScreen(
     val exception = uiState.value.error
     exception?.let(onErrorReceived)
 
-    
+    val uiFilterState by viewModel.uiFilterState.collectAsState()
+
     FilterBottomSheetLayout(
         sheetState = modalBottomSheetState,
+        continents = uiFilterState.continents,
+        languages = uiFilterState.languages
     ) {
         CountriesScreenContent(
             countries = uiState.value.countries,

@@ -26,7 +26,11 @@ class CountriesViewModel @Inject constructor(
     data class UiFilterState(
         val open: Boolean = false,
         val contentLoading: Boolean = false,
-        val filterValue: CountryFilters? = null
+        val filterValue: CountryFilters? = null,
+        val continentOnLoading: Boolean = false,
+        val continents: List<Continent>? = null,
+        val languages: List<Language>? = null,
+        val error: Exception? = null,
     )
 
     data class UiState (
