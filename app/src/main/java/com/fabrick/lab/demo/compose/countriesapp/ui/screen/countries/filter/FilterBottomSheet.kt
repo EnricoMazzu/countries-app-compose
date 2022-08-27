@@ -3,25 +3,18 @@ package com.fabrick.lab.demo.compose.countriesapp.ui.screen.countries
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.autofill.AutofillNode
-import androidx.compose.ui.autofill.AutofillType
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.boundsInWindow
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalAutofill
-import androidx.compose.ui.platform.LocalAutofillTree
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.fabrick.lab.demo.compose.countriesapp.R
-import com.fabrick.lab.demo.compose.countriesapp.ui.navigation.CountriesTopAppBar
-import com.fabrick.lab.demo.compose.countriesapp.ui.rememberAppBarState
+import com.fabrick.lab.demo.compose.countriesapp.domain.model.CountryFilters
 import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.TextDropDownMenu
 import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.TextDropDownMenuOption
 import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.TextDropDownMenuState
@@ -33,11 +26,11 @@ import timber.log.Timber
 @ExperimentalMaterialApi
 @Composable
 fun FilterBottomSheetLayout(
-    viewModel: CountriesViewModel = hiltViewModel(),
     sheetState: ModalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden),
+    onFilterApply: (CountryFilters) -> Unit = {},
+    onFilterReset: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
-    Timber.d("View Model retrieve: ${viewModel.hashCode()}")
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {

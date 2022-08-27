@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
@@ -13,10 +12,8 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewModelScope
 import com.fabrick.lab.demo.compose.countriesapp.data.impl.mock.MockData
 import com.fabrick.lab.demo.compose.countriesapp.domain.model.Country
-import com.fabrick.lab.demo.compose.countriesapp.ui.AppBarState
 import com.fabrick.lab.demo.compose.countriesapp.ui.navigation.NavMenuAction
 import com.fabrick.lab.demo.compose.countriesapp.ui.navigation.addNavMenuActions
 import com.fabrick.lab.demo.compose.countriesapp.ui.theme.CountriesAppTheme
@@ -36,7 +33,9 @@ fun CountriesScreen(
     onDetailsRequired: (Country) -> Unit = {},
     setMenuActions: (List<NavMenuAction>) -> Unit = {},
 ) {
-    val modalBottomSheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val modalBottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden
+    )
     val coroutineScope = rememberCoroutineScope()
     Timber.d("Recompose CountriesScreen")
     addNavMenuActions(
@@ -61,7 +60,6 @@ fun CountriesScreen(
         )
     )
 
-
     val uiState = viewModel.uiState.collectAsState()
     val refreshState = rememberSwipeRefreshState(uiState.value.pullToRefreshLoading)
     val exception = uiState.value.error
@@ -70,22 +68,17 @@ fun CountriesScreen(
     
     FilterBottomSheetLayout(
         sheetState = modalBottomSheetState,
-        viewModel = viewModel
     ) {
         CountriesScreenContent(
             countries = uiState.value.countries,
             refreshState = refreshState,
-            showProgress = uiState.value.onLoading,
+            showProgress = uiState.value.loading,
             onCountrySelected = onDetailsRequired,
             onReloadRequired = {
                 viewModel.reload();
             }
         )
     }
-
-
-    
-
 }
 
 @Composable

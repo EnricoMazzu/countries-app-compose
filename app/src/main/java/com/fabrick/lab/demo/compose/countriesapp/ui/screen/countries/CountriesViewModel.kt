@@ -11,9 +11,7 @@ import com.fabrick.lab.demo.compose.countriesapp.domain.model.CountryFilters
 import com.fabrick.lab.demo.compose.countriesapp.domain.model.Language
 import com.fabrick.lab.demo.compose.countriesapp.domain.repo.CountriesRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
@@ -25,9 +23,15 @@ class CountriesViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
 ): ViewModel() {
 
+    data class UiFilterState(
+        val open: Boolean = false,
+        val contentLoading: Boolean = false,
+        val filterValue: CountryFilters? = null
+    )
+
     data class UiState (
         val pullToRefreshLoading: Boolean = false,
-        val onLoading: Boolean = true,
+        val loading: Boolean = true,
         val countries: Countries = Collections.emptyList(),
         val error: Exception? = null,
     )
@@ -35,17 +39,27 @@ class CountriesViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
-    private val filters: MutableStateFlow<CountryFilters> by lazy {
-        val initialValue = savedStateHandle[COUNTRY_FILTERS_KEY] ?: CountryFilters()
-        MutableStateFlow(initialValue)
+    private val _uiFilterState: MutableStateFlow<UiFilterState> by lazy {
+        val initialFilterValue = savedStateHandle[COUNTRY_FILTERS_KEY] ?: CountryFilters()
+        MutableStateFlow(UiFilterState(
+            filterValue = initialFilterValue
+        ))
     }
+    val uiFilterState: StateFlow<UiFilterState> by lazy { _uiFilterState.asStateFlow() }
 
     init {
         Timber.i("View Model Countries init ${this.hashCode()}")
         viewModelScope.launch {
-            filters.collect {
+            /*filters.collect {
                 savedStateHandle[COUNTRY_FILTERS_KEY] = it
                 countriesRepo.load(it)
+            }*/
+
+            uiFilterState.distinctUntilChangedBy {
+                uiFilterState.value.filterValue
+            }.collect {
+                savedStateHandle[COUNTRY_FILTERS_KEY] = it.filterValue
+                countriesRepo.load(it.filterValue)
             }
         }
 
@@ -53,19 +67,20 @@ class CountriesViewModel @Inject constructor(
             viewModelScope,
             onLoading = {
                 _uiState.value = _uiState.value.copy(
-                    onLoading = true
+                    loading = true
                 )
             },
             onError = {
+                Timber.e(it.getExceptionIfNotHandled())
                 _uiState.value = _uiState.value.copy(
-                    onLoading = false,
+                    loading = false,
                     pullToRefreshLoading = false,
                     error = it.getExceptionIfNotHandled()
                 )
             },
             onSuccess = {
                 _uiState.value = _uiState.value.copy(
-                    onLoading = false,
+                    loading = false,
                     pullToRefreshLoading = false,
                     countries = it.data ?: Collections.emptyList()
                 )
@@ -81,10 +96,9 @@ class CountriesViewModel @Inject constructor(
 
     fun reload() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(
-                pullToRefreshLoading = true
-            )
-            countriesRepo.load(filters.value, true)
+            _uiState.value = uiState.value.copy(pullToRefreshLoading = true)
+            val filter: CountryFilters? = _uiFilterState.value.filterValue
+            countriesRepo.load(filter, true)
         }
     }
 
