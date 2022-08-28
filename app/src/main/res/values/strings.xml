@@ -9,4 +9,6 @@
     <string name="continent_placeholder">Continent</string>
     <string name="language_placeholder">Language</string>
     <string name="filter_header_label">Filter</string>
+    <string name="cancel_filter_text">Reset</string>
+    <string name="apply_filter_text">Apply</string>
 </resources>

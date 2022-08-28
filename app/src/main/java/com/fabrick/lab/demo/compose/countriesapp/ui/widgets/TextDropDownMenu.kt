@@ -54,7 +54,6 @@ fun TextDropDownMenu(
     label: @Composable (() -> Unit)? = null,
     placeholder: @Composable (() -> Unit)? = null,
     state: TextDropDownMenuState,
-    onMenuExpanded: () -> Unit = {}
 ){
     val options by state.item
     val expanded by state.expanded

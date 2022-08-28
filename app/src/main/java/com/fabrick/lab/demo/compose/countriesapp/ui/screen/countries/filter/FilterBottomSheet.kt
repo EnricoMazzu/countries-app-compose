@@ -20,6 +20,7 @@ import com.fabrick.lab.demo.compose.countriesapp.domain.model.CountryFilters
 import com.fabrick.lab.demo.compose.countriesapp.domain.model.Language
 import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.TextDropDownMenu
 import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.TextDropDownMenuOption
+import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.TextDropDownMenuState
 import com.fabrick.lab.demo.compose.countriesapp.ui.widgets.rememberTextDropDownMenuState
 import java.util.*
 
@@ -47,6 +48,9 @@ fun FilterBottomSheetLayout(
         }
     }
 
+    val continentFilterState = rememberTextDropDownMenuState()
+    val languagesFilterState = rememberTextDropDownMenuState()
+
     ModalBottomSheetLayout(
         sheetState = sheetState,
         sheetContent = {
@@ -57,6 +61,7 @@ fun FilterBottomSheetLayout(
                 Column(Modifier.padding(bottom = 15.dp)) {
                     FilterHeader()
                     FilterRow(
+                        state = continentFilterState,
                         values = continentItems,
                         labelRes = R.string.continent_placeholder
                     )
@@ -66,9 +71,35 @@ fun FilterBottomSheetLayout(
                             .fillMaxWidth()
                     )
                     FilterRow (
+                        state = languagesFilterState,
                         values = languageItems,
                         labelRes = R.string.language_placeholder
                     )
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 10.dp, end = 10.dp)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(
+                            modifier = Modifier.padding(end = 5.dp),
+                            onClick = {
+
+                            }) {
+                            Text(text = stringResource(R.string.cancel_filter_text))
+                        }
+
+                        TextButton(
+                            modifier = Modifier.padding(end = 5.dp),
+                            onClick = {
+                                val continentValue = continentFilterState.selectedOption.value
+                                val languagesValue = languagesFilterState.selectedOption.value
+                                val filter = CountryFilters(continentValue?.text, languagesValue?.text)
+                                onFilterApply(filter)
+                            }) {
+                            Text(text = stringResource(R.string.apply_filter_text))
+                        }
+                    }
                 }
             }
         },
@@ -100,10 +131,10 @@ private fun FilterHeader() {
 @ExperimentalMaterialApi
 @Composable
 fun FilterRow(
-    @StringRes labelRes: Int = R.string.language_placeholder,
-    values: List<TextDropDownMenuOption>? = Collections.emptyList()
+    @StringRes labelRes: Int,
+    values: List<TextDropDownMenuOption>? = Collections.emptyList(),
+    state: TextDropDownMenuState = rememberTextDropDownMenuState()
 ) {
-    val state = rememberTextDropDownMenuState()
     LaunchedEffect(values) {
         state.setItems(
             values ?: Collections.emptyList()

@@ -24,7 +24,6 @@ class CountriesViewModel @Inject constructor(
 ): ViewModel() {
 
     data class UiFilterState(
-        val open: Boolean = false,
         val contentLoading: Boolean = false,
         val filterValue: CountryFilters? = null,
         val continentOnLoading: Boolean = false,
@@ -103,6 +102,20 @@ class CountriesViewModel @Inject constructor(
             _uiState.value = uiState.value.copy(pullToRefreshLoading = true)
             val filter: CountryFilters? = _uiFilterState.value.filterValue
             countriesRepo.load(filter, true)
+        }
+    }
+
+    fun openFilterDialog() {
+        Timber.d("openFilterDialog")
+        getContinents().collectResourceStates(viewModelScope){
+            _uiFilterState.value = uiFilterState.value.copy(
+                continents = it.data
+            )
+        }
+        getLanguages().collectResourceStates(viewModelScope){
+            _uiFilterState.value = uiFilterState.value.copy(
+                languages = it.data
+            )
         }
     }
 

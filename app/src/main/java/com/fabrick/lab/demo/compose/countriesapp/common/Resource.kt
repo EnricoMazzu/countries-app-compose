@@ -46,8 +46,8 @@ fun <T: Any> Resource<T>?.isResourceLoaded(): Boolean {
 fun <T : Any> Flow<Resource<T>>.collectResourceStates (
     scope: CoroutineScope,
     onLoading: (Resource.Loading<T>) -> Unit = {},
+    onError: (Resource.Error<T>) -> Unit = {},
     onSuccess: (Resource.Success<T>) -> Unit = {},
-    onError: (Resource.Error<T>) -> Unit = {}
 ): Job {
     return scope.launch {
         collect {

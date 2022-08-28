@@ -35,7 +35,13 @@ fun CountriesScreen(
     setMenuActions: (List<NavMenuAction>) -> Unit = {},
 ) {
     val modalBottomSheetState = rememberModalBottomSheetState(
-        initialValue = ModalBottomSheetValue.Hidden
+        initialValue = ModalBottomSheetValue.Hidden,
+        confirmStateChange = {
+            if(it == ModalBottomSheetValue.Hidden){
+                //viewModel.onModalClose()
+            }
+            true
+        }
     )
     val coroutineScope = rememberCoroutineScope()
     Timber.d("Recompose CountriesScreen")
@@ -49,12 +55,8 @@ fun CountriesScreen(
                     icon = Icons.Default.FilterList,
                     onActionClick = {
                         coroutineScope.launch {
-                            if(modalBottomSheetState.isVisible){
-                                modalBottomSheetState.hide()
-                            }else{
-                                modalBottomSheetState.show()
-                            }
-
+                            viewModel.openFilterDialog()
+                            modalBottomSheetState.show()
                         }
                     }
                 )
@@ -68,6 +70,7 @@ fun CountriesScreen(
     exception?.let(onErrorReceived)
 
     val uiFilterState by viewModel.uiFilterState.collectAsState()
+
 
     FilterBottomSheetLayout(
         sheetState = modalBottomSheetState,
