@@ -40,6 +40,9 @@ class TextDropDownMenuState{
         _selectedOption.value = target
     }
 
+    fun resetSelection(){
+        _selectedOption.value = null
+    }
 }
 
 @Composable

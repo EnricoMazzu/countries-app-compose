@@ -84,6 +84,8 @@ fun FilterBottomSheetLayout(
                         TextButton(
                             modifier = Modifier.padding(end = 5.dp),
                             onClick = {
+                                continentFilterState.resetSelection()
+                                languagesFilterState.resetSelection()
                                 onFilterReset()
                             }) {
                             Text(text = stringResource(R.string.cancel_filter_text))
