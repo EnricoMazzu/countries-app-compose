@@ -36,12 +36,6 @@ fun CountriesScreen(
 ) {
     val modalBottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
-        confirmStateChange = {
-            if(it == ModalBottomSheetValue.Hidden){
-                //viewModel.onModalClose()
-            }
-            true
-        }
     )
     val coroutineScope = rememberCoroutineScope()
     Timber.d("Recompose CountriesScreen")
@@ -71,11 +65,23 @@ fun CountriesScreen(
 
     val uiFilterState by viewModel.uiFilterState.collectAsState()
 
-
     FilterBottomSheetLayout(
         sheetState = modalBottomSheetState,
         continents = uiFilterState.continents,
-        languages = uiFilterState.languages
+        languages = uiFilterState.languages,
+        onFilterReset = {
+            coroutineScope.launch {
+                modalBottomSheetState.hide()
+            }
+            viewModel.resetFilter();
+        },
+        onFilterApply = {
+            Timber.i("Apply filter: $it")
+            coroutineScope.launch {
+                modalBottomSheetState.hide()
+            }
+            viewModel.applyFilter(it)
+        }
     ) {
         CountriesScreenContent(
             countries = uiState.value.countries,

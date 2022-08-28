@@ -84,7 +84,7 @@ fun FilterBottomSheetLayout(
                         TextButton(
                             modifier = Modifier.padding(end = 5.dp),
                             onClick = {
-
+                                onFilterReset()
                             }) {
                             Text(text = stringResource(R.string.cancel_filter_text))
                         }
@@ -94,7 +94,7 @@ fun FilterBottomSheetLayout(
                             onClick = {
                                 val continentValue = continentFilterState.selectedOption.value
                                 val languagesValue = languagesFilterState.selectedOption.value
-                                val filter = CountryFilters(continentValue?.text, languagesValue?.text)
+                                val filter = CountryFilters(continentValue?.id, languagesValue?.id)
                                 onFilterApply(filter)
                             }) {
                             Text(text = stringResource(R.string.apply_filter_text))

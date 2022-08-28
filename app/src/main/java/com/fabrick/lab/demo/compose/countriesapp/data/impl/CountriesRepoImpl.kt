@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class CountriesRepoImpl (
@@ -21,7 +22,7 @@ class CountriesRepoImpl (
     }
     override val countries: Flow<Resource<Countries>> = _countries
 
-    override suspend fun load(countryFilters: CountryFilters?, forceNetworkFetch: Boolean){
+    override suspend fun load(countryFilters: CountryFilters?, forceNetworkFetch: Boolean) = withContext(Dispatchers.IO){
         Timber.d("load")
         loadCountriesInternal(
             countryFilters = countryFilters,

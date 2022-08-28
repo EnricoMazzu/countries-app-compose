@@ -119,6 +119,18 @@ class CountriesViewModel @Inject constructor(
         }
     }
 
+    fun applyFilter(it: CountryFilters) {
+        _uiFilterState.value = _uiFilterState.value.copy(
+            filterValue = it
+        )
+    }
+
+    fun resetFilter() {
+        _uiFilterState.value = _uiFilterState.value.copy(
+            filterValue = null
+        )
+    }
+
     companion object{
         const val COUNTRY_FILTERS_KEY = "COUNTRY_FILTERS_KEY"
     }
