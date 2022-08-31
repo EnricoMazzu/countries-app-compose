@@ -1,8 +1,6 @@
-package com.fabrick.lab.demo.compose.countriesapp.util
+package com.fabrick.lab.demo.compose.countriesapp.data
 
 import com.apollographql.apollo3.exception.*
-import com.fabrick.lab.demo.compose.countriesapp.data.ApiException
-import com.fabrick.lab.demo.compose.countriesapp.data.ErrorCode
 
 object ErrorResolver {
 
