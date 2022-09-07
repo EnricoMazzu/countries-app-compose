@@ -22,7 +22,7 @@ class CountriesRepoImpl (
     }
     override val countries: Flow<Resource<Countries>> = _countries
 
-    override suspend fun load(countryFilters: CountryFilters?, forceNetworkFetch: Boolean) = withContext(Dispatchers.IO){
+    override suspend fun load(countryFilters: CountryFilters?, forceNetworkFetch: Boolean) = withContext(dispatcher){
         Timber.d("load")
         loadCountriesInternal(
             countryFilters = countryFilters,
